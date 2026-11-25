@@ -1,0 +1,6 @@
+{
+  "name": "WORLD ARENA",
+  "description": "Global 3D multiplayer online battle arena with authoritative WebSocket combat, WebRTC voice chat, 4 futuristic arenas, and a native Android Kotlin/Compose/Filament project.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

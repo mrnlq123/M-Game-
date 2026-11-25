@@ -1,0 +1,237 @@
+{
+  "entities": {
+    "UserAccount": {
+      "title": "UserAccount",
+      "description": "Private user account and moderation status isolated from public reads.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 254 },
+        "role": { "type": "string", "enum": ["player", "admin"] },
+        "accountStatus": { "type": "string", "enum": ["active", "suspended"] },
+        "suspendedUntil": { "type": "number" },
+        "suspensionReason": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "accountStatus", "createdAt", "updatedAt"]
+    },
+    "PlayerProfile": {
+      "title": "PlayerProfile",
+      "description": "Public competitive player profile, stats, and preferences.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "playerCode": { "type": "string", "minLength": 4, "maxLength": 16, "pattern": "^WA-[A-Z0-9]{4,10}$" },
+        "username": { "type": "string", "minLength": 2, "maxLength": 24 },
+        "avatarColor": { "type": "string", "maxLength": 16 },
+        "photoUrl": { "type": "string", "maxLength": 512 },
+        "country": { "type": "string", "minLength": 2, "maxLength": 4 },
+        "onlineStatus": { "type": "string", "enum": ["online", "in_match", "offline"] },
+        "wins": { "type": "number" },
+        "matchesPlayed": { "type": "number" },
+        "tagsScored": { "type": "number" },
+        "rating": { "type": "number" },
+        "privacyVoice": { "type": "string", "enum": ["everyone", "team_friends", "friends_only", "muted"] },
+        "privacyInvites": { "type": "string", "enum": ["everyone", "friends_only", "none"] },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "playerCode", "username", "country", "onlineStatus", "wins", "matchesPlayed", "tagsScored", "rating", "privacyVoice", "privacyInvites", "updatedAt"]
+    },
+    "Friendship": {
+      "title": "Friendship",
+      "description": "Friend request, accepted friend link, or block record between two players.",
+      "type": "object",
+      "properties": {
+        "ownerUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "targetUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "targetUsername": { "type": "string", "minLength": 1, "maxLength": 24 },
+        "targetPlayerCode": { "type": "string", "minLength": 4, "maxLength": 16 },
+        "status": { "type": "string", "enum": ["pending", "accepted", "blocked"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerUid", "targetUid", "targetUsername", "status", "createdAt", "updatedAt"]
+    },
+    "RoomMetadata": {
+      "title": "RoomMetadata",
+      "description": "Lobby room metadata for public and private rooms.",
+      "type": "object",
+      "properties": {
+        "roomId": { "type": "string", "minLength": 3, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "roomCode": { "type": "string", "minLength": 4, "maxLength": 12 },
+        "hostUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "hostName": { "type": "string", "minLength": 1, "maxLength": 24 },
+        "mode": { "type": "string", "enum": ["solo_vs", "duo_battle", "squad_battle", "team_arena"] },
+        "mapId": { "type": "string", "enum": ["neon_city", "sky_island", "desert_energy", "ice_crystal"] },
+        "region": { "type": "string", "maxLength": 24 },
+        "isPrivate": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["waiting", "in_progress", "closed"] },
+        "playerCount": { "type": "number" },
+        "maxPlayers": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["roomId", "roomCode", "hostUid", "hostName", "mode", "mapId", "region", "isPrivate", "status", "playerCount", "maxPlayers", "createdAt", "updatedAt"]
+    },
+    "MatchmakingTicket": {
+      "title": "MatchmakingTicket",
+      "description": "Player matchmaking queue ticket.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "mode": { "type": "string", "enum": ["solo_vs", "duo_battle", "squad_battle", "team_arena"] },
+        "region": { "type": "string", "maxLength": 24 },
+        "status": { "type": "string", "enum": ["queued", "matched", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "mode", "region", "status", "createdAt", "updatedAt"]
+    },
+    "MatchRecord": {
+      "title": "MatchRecord",
+      "description": "Metadata for an active or completed arena match.",
+      "type": "object",
+      "properties": {
+        "matchId": { "type": "string", "minLength": 3, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "hostUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "mode": { "type": "string", "enum": ["solo_vs", "duo_battle", "squad_battle", "team_arena", "practice"] },
+        "mapId": { "type": "string", "enum": ["neon_city", "sky_island", "desert_energy", "ice_crystal"] },
+        "region": { "type": "string", "maxLength": 24 },
+        "status": { "type": "string", "enum": ["active", "completed"] },
+        "winnerTeam": { "type": "string", "enum": ["blue", "red", "draw", "none"] },
+        "blueScore": { "type": "number" },
+        "redScore": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["matchId", "hostUid", "mode", "mapId", "region", "status", "winnerTeam", "blueScore", "redScore", "createdAt", "updatedAt"]
+    },
+    "MatchResult": {
+      "title": "MatchResult",
+      "description": "Individual player performance record for a match.",
+      "type": "object",
+      "properties": {
+        "matchId": { "type": "string", "minLength": 3, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "username": { "type": "string", "minLength": 1, "maxLength": 24 },
+        "mode": { "type": "string", "maxLength": 24 },
+        "mapId": { "type": "string", "maxLength": 24 },
+        "team": { "type": "string", "enum": ["blue", "red"] },
+        "winnerTeam": { "type": "string", "enum": ["blue", "red", "draw"] },
+        "tags": { "type": "number" },
+        "taggedCount": { "type": "number" },
+        "captures": { "type": "number" },
+        "score": { "type": "number" },
+        "won": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["matchId", "uid", "username", "mode", "mapId", "team", "winnerTeam", "tags", "taggedCount", "captures", "score", "won", "createdAt"]
+    },
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "Global leaderboard ranking document.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "username": { "type": "string", "minLength": 2, "maxLength": 24 },
+        "country": { "type": "string", "minLength": 2, "maxLength": 4 },
+        "rating": { "type": "number" },
+        "wins": { "type": "number" },
+        "tagsScored": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "username", "country", "rating", "wins", "tagsScored", "updatedAt"]
+    },
+    "PlayerReport": {
+      "title": "PlayerReport",
+      "description": "Player safety/fair-play report submitted for admin review.",
+      "type": "object",
+      "properties": {
+        "reporterUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "reportedUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "reportedUsername": { "type": "string", "minLength": 1, "maxLength": 24 },
+        "reason": { "type": "string", "enum": ["unsportsmanlike", "voice_abuse", "fair_play_violation", "inappropriate_name", "other"] },
+        "details": { "type": "string", "maxLength": 500 },
+        "status": { "type": "string", "enum": ["open", "reviewed", "resolved", "dismissed"] },
+        "reviewedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["reporterUid", "reportedUid", "reportedUsername", "reason", "details", "status", "createdAt", "updatedAt"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Global arena announcement managed by administrators.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "body": { "type": "string", "minLength": 2, "maxLength": 400 },
+        "severity": { "type": "string", "enum": ["info", "event", "maintenance"] },
+        "active": { "type": "boolean" },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "body", "severity", "active", "createdBy", "createdAt", "updatedAt"]
+    },
+    "ArenaConfig": {
+      "title": "ArenaConfig",
+      "description": "Global map and game mode availability controlled by admins.",
+      "type": "object",
+      "properties": {
+        "enabledMaps": { "type": "array" },
+        "enabledModes": { "type": "array" },
+        "updatedBy": { "type": "string", "maxLength": 128 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["enabledMaps", "enabledModes", "updatedBy", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserAccount",
+      "description": "Private user account records containing email, role, and suspension status."
+    },
+    "/profiles/{userId}": {
+      "schema": "PlayerProfile",
+      "description": "Public player profile, country, stats, and voice/invite privacy preferences."
+    },
+    "/friends/{friendshipId}": {
+      "schema": "Friendship",
+      "description": "Friend connections, pending requests, and block records."
+    },
+    "/rooms/{roomId}": {
+      "schema": "RoomMetadata",
+      "description": "Public and private multiplayer lobby metadata."
+    },
+    "/matchmaking/{ticketId}": {
+      "schema": "MatchmakingTicket",
+      "description": "Active player matchmaking tickets."
+    },
+    "/matches/{matchId}": {
+      "schema": "MatchRecord",
+      "description": "Active and completed match metadata."
+    },
+    "/match_results/{resultId}": {
+      "schema": "MatchResult",
+      "description": "Per-player match history and performance breakdowns."
+    },
+    "/leaderboards/{userId}": {
+      "schema": "LeaderboardEntry",
+      "description": "Global competitive leaderboard rankings."
+    },
+    "/reports/{reportId}": {
+      "schema": "PlayerReport",
+      "description": "Player safety and fair-play reports for admin moderation."
+    },
+    "/announcements/{announcementId}": {
+      "schema": "Announcement",
+      "description": "Admin-managed live arena announcements."
+    },
+    "/game_config/{configId}": {
+      "schema": "ArenaConfig",
+      "description": "Admin-managed map and mode availability settings."
+    }
+  }
+}

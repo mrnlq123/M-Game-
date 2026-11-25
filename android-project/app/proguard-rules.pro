@@ -1,0 +1,3 @@
+-keep class com.google.android.filament.** { *; }
+-keep class org.webrtc.** { *; }
+-keep class com.worldarena.game.model.** { *; }
